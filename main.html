@@ -118,6 +118,12 @@
             color: #b4f24c;
         }
 
+        .center-button {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: calc(50% - 5px);
+        }
+
         .food-image {
             width: 100%;
             max-width: 400px;
@@ -168,6 +174,7 @@
             color: #8d8f8a;
         }
     </style>
+    <script src="access-control.js"></script>
 </head>
 
 <body>
@@ -182,27 +189,31 @@
 
         <main>
             <div class="menu-container">
-                <a href="cal.html" class="menu-button">
-                    <i class="fa-solid fa-calculator"></i>
-                    <span>Подсчет калорийности</span>
-                </a>
-                <a href="kzbu.html" class="menu-button">
-                    <i class="fa-solid fa-pie-chart"></i>
-                    <span>Индивидуальный разбор КБЖУ</span>
-                </a>
-                <a href="individual.html" class="menu-button">
-                    <i class="fa-solid fa-pie-chart"></i>
-                    <span>Рацион под свои запросы</span>
-                </a>
-                <a href="foodvideo.html" class="menu-button">
-                    <i class="fa-solid fa-pie-chart"></i>
-                    <span>Полезное видео</span>
+                <a href="greeting.html" class="menu-button">
+                    <i class="fa-solid fa-play-circle"></i>
+                    <span>Приветствие и разъяснения</span>
                 </a>
                 <a href="food.html" class="menu-button">
                     <i class="fa-solid fa-book-open"></i>
-                    <span>Меню питания</span>
+                    <span>Меню Питания</span>
                 </a>
-                <a href="chitmil.html" class="menu-button">
+                <a href="foodvideo.html" class="menu-button">
+                    <i class="fa-solid fa-video"></i>
+                    <span>Полезное видео</span>
+                </a>
+                <a href="cal.html" class="menu-button">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Подсчет калорий</span>
+                </a>
+                <a href="kzbu.html" class="menu-button">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Индивидуальный</span>
+                </a>
+                <a href="individual.html" class="menu-button">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>Рацион</span>
+                </a>
+                <a href="chitmil.html" class="menu-button center-button">
                     <i class="fa-solid fa-cookie-bite"></i>
                     <span>Читмил</span>
                 </a>

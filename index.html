@@ -139,109 +139,111 @@
       }
     }
 
-    /* ===== Install Banner ===== */
+    /* ===== Install Banner (Forced Fullscreen) ===== */
     .install-banner {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+      inset: 0;
+      background: linear-gradient(135deg, #1f1f1f 0%, #101010 100%);
       color: #fff;
-      padding: 1rem 1rem 1.2rem;
-      z-index: 9999;
+      padding: 2rem 1.5rem;
+      z-index: 99999;
       display: none;
       flex-direction: column;
       align-items: center;
-      gap: 0.6rem;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-      animation: slideUp 0.4s ease-out;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      justify-content: center;
+      text-align: center;
+      gap: 1.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     .install-banner.show {
       display: flex;
     }
 
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
-
-      to {
-        transform: translateY(0);
-      }
-    }
-
     .install-banner-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.7rem;
+      gap: 1.2rem;
       width: 100%;
       max-width: 400px;
     }
 
     .install-banner-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 84px;
+      height: 84px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       flex-shrink: 0;
     }
 
     .install-banner-text {
-      flex: 1;
+      width: 100%;
     }
 
     .install-banner-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 0 0 0.15rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      line-height: 1.2;
     }
 
     .install-banner-subtitle {
-      font-size: 0.8rem;
+      font-size: 1rem;
       opacity: 0.85;
       margin: 0;
-      line-height: 1.3;
-    }
-
-    .install-banner-close {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.7rem;
-      background: none;
-      border: none;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.2rem;
-      line-height: 1;
+      line-height: 1.4;
     }
 
     .install-banner-btn {
       display: inline-block;
-      padding: 0.65rem 1.8rem;
+      padding: 1rem 2.5rem;
       background: #b4f24c;
       color: #1a1a1a;
       border: none;
-      border-radius: 25px;
-      font-size: 0.95rem;
-      font-weight: 700;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 800;
       cursor: pointer;
       text-align: center;
+      box-shadow: 0 4px 15px rgba(180, 242, 76, 0.3);
+      transition: transform 0.1s ease;
+    }
+
+    .install-banner-btn:active {
+      transform: scale(0.96);
     }
 
     .install-banner-steps {
-      font-size: 0.8rem;
+      font-size: 1rem;
       opacity: 0.9;
       text-align: center;
-      line-height: 1.5;
-      max-width: 340px;
+      line-height: 1.6;
+      max-width: 320px;
     }
 
     .install-banner-steps b {
       color: #b4f24c;
     }
+
+    .install-url-box {
+      width: 100%;
+      max-width: 320px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      color: #b4f24c;
+      font-size: 0.85rem;
+      font-family: monospace;
+      text-align: center;
+      cursor: pointer;
+      user-select: all;
+      outline: none;
+      box-sizing: border-box;
+    }
   </style>
+    <script src="access-control.js"></script>
 </head>
 
 <body>
@@ -260,14 +262,13 @@
     <a class="cta" href="main.html" aria-label="Начать марафон">Начать</a>
   </div>
 
-  <!-- Install Banner -->
+  <!-- Install Banner (Forced) -->
   <div class="install-banner" id="installBanner">
-    <button class="install-banner-close" id="installClose" aria-label="Закрыть">&times;</button>
     <div class="install-banner-header">
       <img src="icon-192.png" alt="Icon" class="install-banner-icon">
       <div class="install-banner-text">
         <p class="install-banner-title" id="installTitle">Установите приложение</p>
-        <p class="install-banner-subtitle" id="installSubtitle">Быстрый доступ с экрана "Домой"</p>
+        <p class="install-banner-subtitle" id="installSubtitle">Для продолжения необходимо установить приложение на ваш телефон</p>
       </div>
     </div>
     <button class="install-banner-btn" id="installBtn">Установить</button>
@@ -287,7 +288,6 @@
     (function () {
       const banner = document.getElementById('installBanner');
       const btn = document.getElementById('installBtn');
-      const closeBtn = document.getElementById('installClose');
       const stepsEl = document.getElementById('installSteps');
       const titleEl = document.getElementById('installTitle');
       const subtitleEl = document.getElementById('installSubtitle');
@@ -343,7 +343,12 @@
           if (isAndroid && !deferredPrompt) {
             showBanner('android-other');
           } else if (!isAndroid && !isIOS && !deferredPrompt) {
-            showBanner('desktop-other');
+            // Разделяем: Chrome-десктоп (без промпта) или другой браузер
+            if (isChrome) {
+              showBanner('desktop-chrome');
+            } else {
+              showBanner('desktop-other');
+            }
           }
         }, 500);
       }
@@ -381,22 +386,31 @@
         window.location.href = safariUrl;
       }
 
-      // === Скопировать ссылку (фоллбэк для десктопа) ===
-      function copyLink(button) {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          button.textContent = '✓ Ссылка скопирована!';
-          setTimeout(() => { button.textContent = button.dataset.originalText || 'Скопировать ссылку'; }, 2500);
-        }).catch(() => {
-          const ta = document.createElement('textarea');
-          ta.value = window.location.href;
-          ta.style.cssText = 'position:fixed;opacity:0';
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-          button.textContent = '✓ Ссылка скопирована!';
-          setTimeout(() => { button.textContent = button.dataset.originalText || 'Скопировать ссылку'; }, 2500);
-        });
+      // === Показать кнопку копирования ссылки (десктоп) ===
+      function showDesktopChromePrompt(titleEl, subtitleEl, btn, stepsEl) {
+        const currentUrl = window.location.href;
+        titleEl.textContent = 'Откройте сайт в Chrome';
+        subtitleEl.textContent = 'Для установки нужен Google Chrome';
+        btn.textContent = 'Скопировать ссылку';
+        btn.style.display = 'inline-block';
+        stepsEl.innerHTML = 'Вставьте ссылку в <b>Google Chrome</b> — появится кнопка <b>«Установить»</b>';
+        btn.onclick = () => {
+          navigator.clipboard.writeText(currentUrl).then(() => {
+            btn.textContent = '✓ Скопировано!';
+            setTimeout(() => { btn.textContent = 'Скопировать ссылку'; }, 2500);
+          }).catch(() => {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = currentUrl;
+            ta.style.cssText = 'position:fixed;opacity:0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            btn.textContent = '✓ Скопировано!';
+            setTimeout(() => { btn.textContent = 'Скопировать ссылку'; }, 2500);
+          });
+        };
       }
 
       // === Показать баннер ===
@@ -440,10 +454,7 @@
           btn.textContent = 'Открыть в Safari';
           btn.style.display = 'inline-block';
           stepsEl.innerHTML = 'В Safari нажмите <b>Поделиться</b> → <b>«На экран Домой»</b>';
-          btn.onclick = () => {
-            navigator.clipboard.writeText(window.location.href).catch(() => { });
-            openInSafari();
-          };
+          btn.onclick = () => { openInSafari(); };
 
         } else if (mode === 'android-other') {
           // 🤖 Android, не Chrome → перенаправить в Chrome
@@ -476,31 +487,28 @@
               openInSafari();
             };
           } else {
-            titleEl.textContent = 'Откройте в Chrome';
-            subtitleEl.textContent = 'Для установки приложения';
-            btn.textContent = 'Скопировать ссылку';
-            btn.dataset.originalText = 'Скопировать ссылку';
-            btn.style.display = 'inline-block';
-            stepsEl.innerHTML = 'Откройте <b>Google Chrome</b> и вставьте ссылку';
-            btn.onclick = () => { copyLink(btn); };
+            showDesktopChromePrompt(titleEl, subtitleEl, btn, stepsEl);
           }
 
         } else if (mode === 'desktop-other') {
-          // 🖥️ Десктоп (Firefox, Edge, Opera и т.д.)
-          titleEl.textContent = 'Откройте в Chrome';
-          subtitleEl.textContent = 'Для установки приложения';
-          btn.textContent = 'Скопировать ссылку';
-          btn.dataset.originalText = 'Скопировать ссылку';
-          btn.style.display = 'inline-block';
-          stepsEl.innerHTML = 'Откройте <b>Google Chrome</b> и вставьте ссылку.<br>Появится кнопка <b>«Установить»</b> в адресной строке.';
-          btn.onclick = () => { copyLink(btn); };
+          // 🖥️ Десктоп (Firefox, Edge, Safari и т.д.)
+        } else if (mode === 'desktop-chrome') {
+          // ✅ Пользователь уже в Chrome, но промпт не пришёл (нет HTTPS или критерии PWA не выполнены)
+          titleEl.textContent = 'Установите приложение';
+          subtitleEl.textContent = 'Нажмите кнопку установки в адресной строке';
+          btn.style.display = 'none';
+          stepsEl.innerHTML =
+            'Найдите иконку <b>⊕</b> или <b>💻</b> в правой части адресной строки Chrome<br>' +
+            'и нажмите <b>«Установить»</b>.<br><br>' +
+            '<span style="opacity:0.6;font-size:0.85em">Если иконки нет — сайт должен быть открыт по HTTPS-адресу, а не из файла.</span>';
+
+        } else if (mode === 'desktop-other') {
+          // 🖥️ Десктоп (Firefox, Edge, Safari и т.д.)
+          showDesktopChromePrompt(titleEl, subtitleEl, btn, stepsEl);
         }
       }
 
-      // === Закрытие баннера ===
-      closeBtn.addEventListener('click', () => {
-        banner.classList.remove('show');
-      });
+      // Убрано закрытие крестиком, так как установка теперь принудительная
     })();
   </script>
 </body>
